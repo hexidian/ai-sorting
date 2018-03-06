@@ -74,4 +74,5 @@ def main():
     export.write(str(result))
     export.close
 
-main()
+if __name__ == "__main__":
+    main()

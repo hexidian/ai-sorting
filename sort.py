@@ -1,6 +1,8 @@
 import math
-import FirstSort
-
+from mergeSort import *
+import time
+if __name__ == "__main__":
+    import random
 #I will be using Timsort for the subgroups instead of mergesort. So this ends up being a hybrid algorithm of 3 different types.
 
 class sortalg:
@@ -42,7 +44,7 @@ class sortalg:
                 subdTop = ((group+1)/groups)
                 subdBot = (group/groups)
                 for i in data:
-                    val = self.groupFunc(i)
+                    val = self.groupFunc(i/float(top))
                     if (val>=subdBot) and (val<subdTop):
                         subd.append(i)
                 subs.append(subd)
@@ -50,7 +52,7 @@ class sortalg:
             #now we sort each of these small lists using the built-in Timsort
 
             for i in subs:
-                subs.sort()
+                i.sort()
 
             #now we just need to put the lists together
 
@@ -59,3 +61,23 @@ class sortalg:
                 output.extend(i)
 
             return output
+
+def main():
+    starter = [random.randint(0,100000) for i in range(10000)]
+    sorter = sortalg(lambda x: x)
+    startTime = time.time()
+    sortedList = sorter.fsort(starter)
+    print "completed groupsort in",time.time()-startTime
+    startTime = time.time()
+    sortedList = mSort(starter)
+    print "completed mergesort in",time.time()-startTime
+    startTime = time.time()
+    starter.sort()
+    print "completed timsort in",time.time()-startTime
+
+    f = open("output.txt","w")
+    f.write(str(sortedList))
+    f.close()
+
+if __name__ == "__main__":
+    main()

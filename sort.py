@@ -39,17 +39,18 @@ class sortalg:
             for grop in range(0,groups):
                 group = float(grop)
                 subd = []
-                subdTop = top * ((group+1)/groups)
-                subdBot = top * (group/groups)
+                subdTop = ((group+1)/groups)
+                subdBot = (group/groups)
                 for i in data:
-                    if (i>=subdBot) and (i<subdTop):
+                    val = self.groupFunc(i)
+                    if (val>=subdBot) and (val<subdTop):
                         subd.append(i)
                 subs.append(subd)
 
-            #now we sort each of these small lists
+            #now we sort each of these small lists using the built-in Timsort
 
-            for i in range(len(subs)):
-                subs[i] = Ssort(subs[i])
+            for i in subs:
+                subs.sort()
 
             #now we just need to put the lists together
 

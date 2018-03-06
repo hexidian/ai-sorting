@@ -43,6 +43,8 @@ def get_matrix():
     return matrix,answers
 
 def determinate(matrix):
+    if len(matrix) == 1:
+        return matrix[0][0]
 
     if len(matrix) == 2:
         return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0])#just the basic a*d - b*c
@@ -81,7 +83,6 @@ def cofactor(matrix):
 
 def adjoint(matrix):
     cofactors = cofactor(matrix)
-
     adjnt = []
 
     for row in range(len(cofactors)):
@@ -102,7 +103,7 @@ def matrix_mult(matrixa,matrixb):
 
     for prow in range(len(matrixa)):        #iterates through the rows that will be in the product
         newrow = []
-        for pcolumn in range(len(matrixb)): #iterates through the columns that will be in the product
+        for pcolumn in range(len(matrixb[0])): #iterates through the columns that will be in the product
             spotsum = 0
             for spot in range(len(matrixb)):    #iterates through the spot in matrixa's row and matrixb's columbn
                 spotsum += matrixa[prow][spot] * matrixb[spot][pcolumn]
@@ -116,6 +117,14 @@ def matrix_mult_const(matrix,constant):
         for j in range(len(matrix[0])):
             matrix[i][j] *= constant
 
+    return matrix
+def solve(matrix,constants):
+    #if len(matrix) != 2:
+    print matrix
+    adj = adjoint(matrix)
+    inv = matrix_mult_const(adj, (1/float(determinate(matrix))) )
+    print matrix_mult(inv,matrix),"\n"
+    return matrix_mult(inv,constants)
 def main():
     matrix,constants = get_matrix()
     '''
@@ -123,9 +132,6 @@ def main():
     print "the minors are",minors(matrix)
     print "the cofactors are",cofactor(matrix)
     print "the adjoint is",adjoint(matrix)'''
-
-    adj = adjoint(matrix)
-    inv = matrix_mult_const(adj,determinate(matrix))
-    print matrix_mult(inv,constants)
+    print solve(matrix,constants)
 
 main()

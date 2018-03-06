@@ -120,10 +120,8 @@ def matrix_mult_const(matrix,constant):
     return matrix
 def solve(matrix,constants):
     #if len(matrix) != 2:
-    print matrix
     adj = adjoint(matrix)
     inv = matrix_mult_const(adj, (1/float(determinate(matrix))) )
-    print matrix_mult(inv,matrix),"\n"
     return matrix_mult(inv,constants)
 def main():
     matrix,constants = get_matrix()
@@ -134,4 +132,5 @@ def main():
     print "the adjoint is",adjoint(matrix)'''
     print solve(matrix,constants)
 
-main()
+if __name__ == "__main__":
+    main()

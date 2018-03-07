@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+typedef struct {
+	int val;
+	struct listNode* next;
+} listNode;
+
+typedef struct {
+	listNode* top;
+	listNode* bottom;
+} list;
+
+//for arrays
 void Merge(int *A,int *L,int leftCount,int *R,int rightCount) {
 	int i,j,k;
 
@@ -20,6 +31,39 @@ void Merge(int *A,int *L,int leftCount,int *R,int rightCount) {
 	}
 	while(i < leftCount)  {A[k++] = L[i++];}
 	while(j < rightCount) {A[k++] = R[j++];}
+}
+
+//merges two lists, L and R, into the O list
+void listMerge(list* O, list* L, int leftLen, list* R, int rightLen){
+	int i,j,k;
+	i = 0; j = 0; k= 0;
+
+	while(i<leftLen && j<rightLen) {
+		if(L->top->val < R->top->val)
+		{
+			listNode* adding = L->top;//store it as a variable so that we don't have to keep accessing it.
+			O->bottom->next = adding;
+			O->bottom = adding;
+			L->top = adding->next;
+			O->bottom->next = NULL;
+			k++; i++;
+		} else {
+			listNode* adding = R->top;
+			O->bottom->next = adding;
+			O->bottom = adding;
+			R->top = adding->next;
+			O->bottom->next = NULL;
+			k++; j++;
+		}
+	}
+	if (i<leftLen) {
+		O->bottom->next = L->top;
+		O->bottom = L->bottom;
+		//this leave the L list trashed, but that is okay because we don't need to use it anymore
+	} else {
+		O->bottom->next = R->top;
+		O->bottom = L->bottom;
+	}
 }
 
 //basic mergesort function. I will be comparing my natural merge sort to this
@@ -59,5 +103,5 @@ void NaturalMergeSort(int *Array, int len){
 //TODO: implement linked lists and use those for the merges because I will only need to be accessing the first element of it or appending to the end which is O(1) just like with arrays. This I will have unlimited length runs. I can then merge the runs faster b/c joining two lists is easy (just changing one pointer)
 
 int main(){
-  //
+  list left;
 }

@@ -12,6 +12,21 @@ typedef struct {
 	listNode* bottom;
 } list;
 
+typedef struct {
+	list* data;
+	struct list2delem* next;
+} list2delem;
+
+typedef struct {
+	list2delem* top;
+	list2delem* bottom;
+} list2d;
+
+void append2delem(list2delem* start, listNode* new) {
+	start->data->bottom->next = new;
+	start->data->bottom = new;
+}
+
 //for arrays
 void Merge(int *A,int *L,int leftCount,int *R,int rightCount) {
 	int i,j,k;
@@ -90,10 +105,10 @@ void MergeSort(int *A,int n) {
   free(R);
 }
 
-void NaturalMergeSort(int *Array, int len){
+void NaturalMergeSort(list* A, int len){
 
   bool run = true;
-
+	int lastVal;
   for (int i = 0; i < len; i++){
 
   }

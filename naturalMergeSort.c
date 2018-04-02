@@ -107,10 +107,27 @@ void MergeSort(int *A,int n) {
 
 void NaturalMergeSort(list* A, int len){
 
-  bool run = true;
+  bool run = false;
 	int lastVal;
-  for (int i = 0; i < len; i++){
 
+	list2d bigboi;
+	list2delem molds[len];//this is just a bunch of stuff for holding
+	int runs = 0;
+
+  for (int i = 0; i < len; i++){
+		if (!run) {
+			list2delem* this = &molds[runs];
+			if (runs > 1) {
+				bigboi.bottom->next = this;
+				bigboi.bottom = this;
+			} else if (runs == 0) {
+				bigboi.bottom = this;
+				bigboi.top = this;
+			} else /*if it's one*/ {
+				bigboi.top->next = this;
+				bigboi.bottom = this;
+			}
+		}
   }
 
 }

@@ -13,7 +13,8 @@ typedef struct {
 } list;
 
 typedef struct {
-	list* data;
+	listNode* top;
+	listNode* bottom;
 	struct list2delem* next;
 } list2delem;
 
@@ -113,21 +114,28 @@ void NaturalMergeSort(list* A, int len){
 	list2d bigboi;
 	list2delem molds[len];//this is just a bunch of stuff for holding
 	int runs = 0;
+	listNode nextNode = A->top;
 
   for (int i = 0; i < len; i++){
 		if (!run) {
 			list2delem* this = &molds[runs];
+			this->top = nextNode; this->bottom = nextNode;
+			nextNode = nextNode->next;
+			this->top->next = NULL;
 			if (runs > 1) {
 				bigboi.bottom->next = this;
 				bigboi.bottom = this;
 			} else if (runs == 0) {
 				bigboi.bottom = this;
 				bigboi.top = this;
-			} else /*if it's one*/ {
+			} else {
 				bigboi.top->next = this;
 				bigboi.bottom = this;
 			}
+			run = true;
+			runs++;
 		}
+
   }
 
 }

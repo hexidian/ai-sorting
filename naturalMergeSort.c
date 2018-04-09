@@ -108,13 +108,15 @@ void MergeSort(int *A,int n) {
 
 void NaturalMergeSort(list* A, int len){
 
+	//divide up the runs... this takes many lines
+
   bool run = false;
 	int lastVal;
 
 	list2d bigboi;
 	list2delem molds[len];//this is just a bunch of stuff for holding
 	int runs = 0;
-	listNode nextNode = A->top;
+	listNode* nextNode = A->top;
 
   for (int i = 0; i < len; i++){
 		if (!run) {
@@ -134,9 +136,26 @@ void NaturalMergeSort(list* A, int len){
 			}
 			run = true;
 			runs++;
+		} else {
+			this->bottom->next = nextNode;
+			this->bottom = nextNode;
+			nextNode = nextNode->next;
+			this->bottom->next = NULL;
+			if (this->bottom->val <= nextNode->val) {
+				run = false;
+			}
 		}
-
   }
+
+	//finally done finding all the runs.
+
+	//now we need to merge em'
+
+	while (bigboi->top != bigboi->bottom){
+		for (int i = bigboi->top; i->next != NULL; i = i->next){
+			//TODO: some list merge stuff
+		}
+	}
 
 }
 

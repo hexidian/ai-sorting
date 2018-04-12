@@ -2,30 +2,33 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct {
+typedef struct listNode{
 	int val;
 	struct listNode* next;
 } listNode;
 
-typedef struct {
+typedef struct list{
 	listNode* top;
 	listNode* bottom;
 } list;
 
-typedef struct {
+typedef struct list2delem{
 	listNode* top;
 	listNode* bottom;
 	struct list2delem* next;
 } list2delem;
 
-typedef struct {
+typedef struct list2d{
 	list2delem* top;
 	list2delem* bottom;
 } list2d;
 
-void append2delem(list2delem* start, listNode* new) {
-	start->data->bottom->next = new;
-	start->data->bottom = new;
+void print_list2delem(list2delem* this){
+	printf("\n");
+	for(listNode* i = this->top; i != NULL; i = i->next){
+		printf("%d,\n", i->val);
+	}
+	printf("\n");
 }
 
 //for arrays
@@ -51,6 +54,40 @@ void Merge(int *A,int *L,int leftCount,int *R,int rightCount) {
 
 //merges two lists, L and R, into the O list
 void listMerge(list* O, list* L, int leftLen, list* R, int rightLen){
+	int i,j,k;
+	i = 0; j = 0; k= 0;
+
+	while(i<leftLen && j<rightLen) {
+		if(L->top->val < R->top->val)
+		{
+			listNode* adding = L->top;//store it as a variable so that we don't have to keep accessing it.
+			O->bottom->next = adding;
+			O->bottom = adding;
+			L->top = adding->next;
+			O->bottom->next = NULL;
+			k++; i++;
+		} else {
+			listNode* adding = R->top;
+			O->bottom->next = adding;
+			O->bottom = adding;
+			R->top = adding->next;
+			O->bottom->next = NULL;
+			k++; j++;
+		}
+	}
+	if (i<leftLen) {
+		O->bottom->next = L->top;
+		O->bottom = L->bottom;
+		//this leave the L list trashed, but that is okay because we don't need to use it anymore
+	} else {
+		O->bottom->next = R->top;
+		O->bottom = L->bottom;
+	}
+}
+
+
+//TODO: rewrite this function to work without the length inputs. Take use of some of the techniques used latter in the code
+void list2delemMerge(list2delem* O, list2delem* L, int leftLen, list2delem* R, int rightLen){
 	int i,j,k;
 	i = 0; j = 0; k= 0;
 
@@ -108,7 +145,7 @@ void MergeSort(int *A,int n) {
 
 void NaturalMergeSort(list* A, int len){
 
-	//divide up the runs... this takes many lines
+	//first divide up the runs... this takes many lines
 
   bool run = false;
 	int lastVal;
@@ -117,8 +154,10 @@ void NaturalMergeSort(list* A, int len){
 	list2delem molds[len];//this is just a bunch of stuff for holding
 	int runs = 0;
 	listNode* nextNode = A->top;
+	list2delem* this;
 
-  for (int i = 0; i < len; i++){
+  for (int i = 0; i < len; i++)
+	{
 		if (!run) {
 			list2delem* this = &molds[runs];
 			this->top = nextNode; this->bottom = nextNode;
@@ -151,11 +190,17 @@ void NaturalMergeSort(list* A, int len){
 
 	//now we need to merge em'
 
-	while (bigboi->top != bigboi->bottom){
-		for (int i = bigboi->top; i->next != NULL; i = i->next){
-			//TODO: some list merge stuff
+	while (bigboi.top != bigboi.bottom){
+		for (list2delem* i = bigboi.top; i->next != NULL; i = i->next){
+			list2delem holder;
+			list2delemMerge(&holder, i, i->next);
+			i->top = holder.top; i->bottom = holder.bottom;
+			i->next = i->next->next;
+			//now there should be no pointers to the element which comes after i. It will still be in the memory, but I might take it out later for the sake of freeing up memory
 		}
 	}
+
+	print_list2delem(bigboi.top);
 
 }
 

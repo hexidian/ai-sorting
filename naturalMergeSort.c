@@ -85,38 +85,39 @@ void listMerge(list* O, list* L, int leftLen, list* R, int rightLen){
 	}
 }
 
+void list2delemMerge(list2delem* O, list2delem* L, list2delem* R){
 
-//TODO: rewrite this function to work without the length inputs. Take use of some of the techniques used latter in the code
-void list2delemMerge(list2delem* O, list2delem* L, int leftLen, list2delem* R, int rightLen){
-	int i,j,k;
-	i = 0; j = 0; k= 0;
+	listNode* i = L->top;
+	listNode* j = R->top;
+	listNode* holder;
+	if (i->val > j->val) {
+		holder = j;
+		O->top = j;
+		O->bottom = j;
+		j->next = NULL;
+		j = holder->next;
+	} else {
+		holder = i;
+		O->top = i;
+		O->bottom = i;
+		i->next = NULL;
+		i = holder->next;
+	}
 
-	while(i<leftLen && j<rightLen) {
-		if(L->top->val < R->top->val)
-		{
-			listNode* adding = L->top;//store it as a variable so that we don't have to keep accessing it.
-			O->bottom->next = adding;
-			O->bottom = adding;
-			L->top = adding->next;
-			O->bottom->next = NULL;
-			k++; i++;
+	while (i != NULL && j != NULL){
+		if (i->val > j->val) {
+			holder = j;
+			O->bottom->next = j;
+			O->bottom = j;
+			j = holder->next;
 		} else {
-			listNode* adding = R->top;
-			O->bottom->next = adding;
-			O->bottom = adding;
-			R->top = adding->next;
-			O->bottom->next = NULL;
-			k++; j++;
+			holder = i;
+			O->bottom->next = i;
+			O->bottom = i;
+			i = holder->next;
 		}
 	}
-	if (i<leftLen) {
-		O->bottom->next = L->top;
-		O->bottom = L->bottom;
-		//this leave the L list trashed, but that is okay because we don't need to use it anymore
-	} else {
-		O->bottom->next = R->top;
-		O->bottom = L->bottom;
-	}
+
 }
 
 //basic mergesort function. I will be comparing my natural merge sort to this
@@ -155,7 +156,6 @@ void NaturalMergeSort(list* A, int len){
 	int runs = 0;
 	listNode* nextNode = A->top;
 	list2delem* this;
-
   for (int i = 0; i < len; i++)
 	{
 		if (!run) {
@@ -180,11 +180,11 @@ void NaturalMergeSort(list* A, int len){
 			this->bottom = nextNode;
 			nextNode = nextNode->next;
 			this->bottom->next = NULL;
-			if (this->bottom->val <= nextNode->val) {
+			if (nextNode!=NULL && this->bottom->val <= nextNode->val) {
 				run = false;
 			}
 		}
-  }
+	}
 
 	//finally done finding all the runs.
 
@@ -199,6 +199,7 @@ void NaturalMergeSort(list* A, int len){
 			//now there should be no pointers to the element which comes after i. It will still be in the memory, but I might take it out later for the sake of freeing up memory
 		}
 	}
+	printf("here\n");
 
 	print_list2delem(bigboi.top);
 
@@ -208,4 +209,13 @@ void NaturalMergeSort(list* A, int len){
 
 int main(){
   list left;
+	listNode a;
+	a.val = 10;
+	left.top = &a;
+	listNode b;
+	b.val = 5;
+	left.bottom = &b;
+	a.next = &b;
+	NaturalMergeSort(&left, 2);
+
 }
